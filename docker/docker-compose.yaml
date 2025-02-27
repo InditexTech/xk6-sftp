@@ -1,0 +1,6 @@
+services:
+    sftp:
+        image: atmoz/sftp
+        ports:
+            - "22:22"
+        command: user:pwd:1001:100:wwwroot
