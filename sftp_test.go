@@ -12,7 +12,7 @@ const (
 	user     = "user"
 	password = "pwd"
 	host     = "localhost"
-	port     = 22
+	port     = 3322
 )
 
 func TestSFTPClient_Connect(t *testing.T) {
