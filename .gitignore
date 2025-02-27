@@ -3,3 +3,4 @@ downloaded
 testdata
 .tool-versions
 .bin/
+coverage.*
