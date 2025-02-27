@@ -12,7 +12,7 @@ all: format lint compose-up test run compose-down
 deps:
 	@if [ -z "$(XK6_BINARY)" ]; then \
 		echo "Installing xk6..."; \
-		go install -o ./bin/ go.k6.io/xk6/cmd/xk6@$(XK6_VERSION); \
+		go install go.k6.io/xk6/cmd/xk6@$(XK6_VERSION); \
 	else \
 		echo "xk6 is already installed."; \
 	fi
