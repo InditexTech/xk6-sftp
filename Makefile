@@ -40,7 +40,7 @@ run: deps compose-up
 	@echo "Running example..."
 	@xk6 run --vus 3 --duration 1m ./examples/main.js
 
-verify: deps fmt lint compose-up test compose-down
+verify: compose-up deps fmt lint test compose-down
 	@echo "Running verify..."
 
 test:
