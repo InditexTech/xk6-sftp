@@ -23,7 +23,8 @@ See [examples](./examples/) folder.
 ## Extension API
 
 - `newClient`: creates a new SFTP client.
-- `downloadFile`: to download a file.
+- `downloadFile`: to download a file from SFTP server.
 - `uploadFile`: to upload a file creating target directories if necessary.
+- `deleteFile`: to delete a file from SFTP server.
 - `close`: closes the SFTP connection.
 

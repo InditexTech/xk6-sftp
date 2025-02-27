@@ -9,7 +9,7 @@ GOLANGCI_BINARY := $(shell command -v golangci-lint 2> /dev/null)
 
 all: format lint compose-up test run compose-down
 
-deps: compose-up
+deps:
 	@if [ -z "$(XK6_BINARY)" ]; then \
 		echo "Installing xk6..."; \
 		go install -o ./bin/ go.k6.io/xk6/cmd/xk6@$(XK6_VERSION); \
@@ -36,19 +36,29 @@ build: deps
 	@echo "Building k6  with STP extension..."
 	@xk6 build --with github.com/inditex/xk6-sftp=.
 
-run: deps
+run: deps compose-up
 	@echo "Running example..."
 	@xk6 run --vus 3 --duration 1m ./examples/main.js
 
-test: deps
+verify: format lint test
+	@echo "Running verify..."
+
+test:
 	@echo "Running unit tests..."
 	@go clean -testcache && go test ./...
+
+it-test: deps compose-up integration compose-down
+
+integration: deps
+	@echo "Running integration tests..."
+	@go test -tags=integration ./...
 
 tidy:
 	@echo "Running go mod tidy..."
 	@go mod tidy
 
 format:
+	@echo "Running go fmt..."
 	go fmt ./...
 
 lint: deps
