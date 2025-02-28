@@ -1,6 +1,6 @@
 # xk6-sftp
 
-The `xk6-sftp` extension is a plugin for the [k6](https://grafana.com/docs/k6/latest/) load testing tool that adds support for SFTP (Secure File Transfer Protocol) operations. This extension allows you to perform SFTP actions such as uploading, downloading, and managing files on an SFTP server as part of your load testing scripts. It is useful for testing the performance and reliability of systems that rely on SFTP for file transfers.
+The `xk6-sftp` extension is a plugin for the k6 load testing tool that adds support for SFTP (Secure File Transfer Protocol) operations. This extension allows you to perform SFTP actions such as uploading, downloading, and managing files on an SFTP server as part of your load testing scripts. It is useful for testing the performance and reliability of systems that rely on SFTP for file transfers.
 
 ## Install
 

@@ -40,24 +40,19 @@ run: deps compose-up
 	@echo "Running example..."
 	@xk6 run --vus 3 --duration 1m ./examples/main.js
 
-verify: format lint test
+verify: compose-up deps fmt lint test compose-down
 	@echo "Running verify..."
 
 test:
-	@echo "Running unit tests..."
-	@go clean -testcache && go test ./...
-
-it-test: deps compose-up integration compose-down
-
-integration: deps
-	@echo "Running integration tests..."
-	@go test -tags=integration ./...
+	@echo "Running tests..."
+	@go clean -testcache && go test -coverprofile=coverage.out ./...
+	@go tool cover -html=coverage.out -o coverage.html
 
 tidy:
 	@echo "Running go mod tidy..."
 	@go mod tidy
 
-format:
+fmt:
 	@echo "Running go fmt..."
 	go fmt ./...
 

@@ -13,13 +13,11 @@ import (
 
 type Client struct{}
 
-var _ SFTPClientInterface = &SFTPClient{}
-
 type SFTPClient struct {
 	client *sftp.Client
 }
 
-func (*Client) NewClient(user, password, host string, port int) SFTPClientInterface {
+func (*Client) NewClient(user, password, host string, port int) *SFTPClient {
 	config := &ssh.ClientConfig{
 		User: user,
 		Auth: []ssh.AuthMethod{
@@ -50,12 +48,7 @@ func (s *SFTPClient) UploadFile(localPath, remotePath string) *OperationResult {
 		return &OperationResult{Success: false, Message: "sftp client is not connected"}
 	}
 
-	absLocalPath, err := filepath.Abs(localPath)
-	if err != nil {
-		logger.Errorf("failed to get absolute path for local file (%s): %v", localPath, err)
-		return &OperationResult{Success: false, Message: fmt.Sprintf("failed to get absolute path for local file (%s): %v", localPath, err)}
-	}
-
+	absLocalPath, _ := filepath.Abs(localPath)
 	srcFile, err := os.Open(absLocalPath)
 	if err != nil {
 		logger.Errorf("failed to open local file (%s): %v", absLocalPath, err)
@@ -139,7 +132,7 @@ func (s *SFTPClient) DeleteFile(remotePath string) *OperationResult {
 }
 
 func (s *SFTPClient) Close() *OperationResult {
-	if s.client == nil {
+	if !s.existsConnection() {
 		return &OperationResult{Success: true, Message: "sftp client is already closed"}
 	}
 	err := s.client.Close()

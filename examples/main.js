@@ -1,7 +1,7 @@
 import xk6sftp from "k6/x/sftp";
 import { sleep, group, check } from "k6";
 
-const client = xk6sftp.newClient("user", "pwd", "localhost", 22);
+const client = xk6sftp.newClient("user", "pwd", "localhost", 3322);
 const arrayFiles = ["utf-8.txt", "utf-16.txt", "binary.png"];
 
 export default function () {
