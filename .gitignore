@@ -4,3 +4,5 @@ testdata
 .tool-versions
 .bin/
 coverage.*
+.vscode/
+.idea/
