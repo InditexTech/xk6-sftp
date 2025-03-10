@@ -27,4 +27,3 @@ See [examples](./examples/) folder.
 - `uploadFile`: to upload a file creating target directories if necessary.
 - `deleteFile`: to delete a file from SFTP server.
 - `close`: closes the SFTP connection.
-

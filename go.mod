@@ -1,4 +1,4 @@
-module github.com/inditex/xk6-sftp
+module github.com/InditexTech/xk6-sftp
 
 go 1.23.5
 
