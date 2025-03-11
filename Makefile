@@ -34,7 +34,7 @@ compose-down:
 
 build: deps
 	@echo "Building k6  with STP extension..."
-	@xk6 build --with github.com/inditex/xk6-sftp=.
+	@xk6 build --with github.com/InditexTech/xk6-sftp=.
 
 run: deps compose-up
 	@echo "Running example..."
