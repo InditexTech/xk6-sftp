@@ -1,29 +1,78 @@
 # xk6-sftp
 
-The `xk6-sftp` extension is a plugin for the k6 load testing tool that adds support for SFTP (Secure File Transfer Protocol) operations. This extension allows you to perform SFTP actions such as uploading, downloading, and managing files on an SFTP server as part of your load testing scripts. It is useful for testing the performance and reliability of systems that rely on SFTP for file transfers.
+An extension for the k6 load testing tool that adds support for SFTP (Secure File Transfer Protocol) operations. This extension allows you to perform SFTP actions such as uploading, downloading, and managing files on an SFTP server as part of your load testing scripts. It is useful for testing the performance and reliability of systems that rely on SFTP for file transfers.
 
 ## Install
 
-### Pre-built binaries 
+To build a `k6` binary with this extension, first ensure you have the prerequisites:
 
-``` sh
-make run
+- [Go toolchain](https://go101.org/article/go-toolchain.html)
+- Git
+
+Then:
+
+1. Download [xk6](https://github.com/grafana/xk6):
+```bash
+go install go.k6.io/xk6/cmd/xk6@latest
 ```
 
-### Build from source
+2. [Build](https://github.com/grafana/xk6#command-usage) the k6 binary:
+```bash
+xk6 build --with github.com/InditexTech/xk6-sftp@latest
+```
 
-``` sh
+### Development
+
+For building a `k6` binary with the extension from the local code, you can run:
+
+```bash
 make build
 ```
 
-## Examples
+For testing and running the extension locally, an SFTP server is required. The default target in the Makefile will:
 
-See [examples](./examples/) folder.
+- Run an SFTP server with Docker Compose (make sure you have [Docker](https://docs.docker.com/engine/install/) & [Docker Compose](https://docs.docker.com/compose/install/) installed in your system).
+- Download the dependencies.
+- Format your code.
+- Run the integration tests.
+- Run the [example](examples/main.js) script.
 
-## Extension API
+```bash
+git clone git@github.com:InditexTech/xk6-sftp.git
+cd xk6-sftp
+make
+```
 
-- `newClient`: creates a new SFTP client.
-- `downloadFile`: to download a file from SFTP server.
-- `uploadFile`: to upload a file creating target directories if necessary.
-- `deleteFile`: to delete a file from SFTP server.
-- `close`: closes the SFTP connection.
+## Usage
+
+This extension provides the following JS methods for interacting with the SFTP server:
+
+```javascript
+import xk6sftp from "k6/x/sftp";
+
+// Create a new SFTP client
+const client = xk6sftp.newClient("username", "password", "host", 3322);
+
+export default function () {
+  // Upload a file, creating target directories if necessary
+  let result = client.uploadFile("localPath", "remotePath");
+  
+  // Download a file
+  result = client.downloadFile("remotePath", "localPath");
+  
+  // Delete a file
+  result = client.deleteFile("remotePath")
+  
+  // All the ...File methods return a JS object such as:
+  // {"success":true,"message":"file uploaded successfully"}
+}
+
+export function teardown() {
+  if (client !== null) {
+    // Close the SFTP connection
+    client.close();
+  }
+}
+```
+
+See the [examples](./examples) folder for a more detailed usage example.
