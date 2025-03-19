@@ -23,6 +23,12 @@ xk6 build --with github.com/InditexTech/xk6-sftp@latest
 
 ### Development
 
+For building a `k6` binary with the plugin from the local code, you can run:
+
+```bash
+make build
+```
+
 For testing and running the plugin locally, an SFTP server is required. The default target in the Makefile will:
 
 - Run an SFTP server with Docker Compose (make sure you have [Docker](https://docs.docker.com/engine/install/) & [Docker Compose](https://docs.docker.com/compose/install/) installed in your system).
