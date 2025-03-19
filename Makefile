@@ -28,12 +28,12 @@ deps:
 .PHONY: compose-up
 compose-up:
 	@echo "Starting sftp server..."
-	@docker-compose -f docker/docker-compose.yaml up -d
+	@docker compose -f docker/docker-compose.yaml up -d
 
 .PHONY: compose-down
 compose-down:
 	@echo "Destrying sftp server..."
-	@docker-compose -f docker/docker-compose.yaml down
+	@docker compose -f docker/docker-compose.yaml down
 
 .PHONY: build
 build: deps
@@ -43,7 +43,7 @@ build: deps
 .PHONY: run
 run: deps compose-up
 	@echo "Running example..."
-	@xk6 run --vus 3 --duration 1m ./examples/main.js
+	@xk6 run --vus=1 --iterations=10 ./examples/main.js
 
 .PHONY: verify
 verify: compose-up deps format lint test compose-down

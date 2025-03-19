@@ -6,12 +6,13 @@ const arrayFiles = ["utf-8.txt", "utf-16.txt", "binary.png"];
 
 export default function () {
     const remotePath = "/wwwroot";
+    // Local path is relative to the repository root path
+    const localPath = "./examples/test-data";
 
-    // Relative path from parent director, aka, make run
     arrayFiles.forEach(file => {
         group(`Upload ${file}`, function () {
-            const r = client.uploadFile(`./examples/test-data/${file}`, `${remotePath}/${file}`);
-            //console.log(r);
+            const r = client.uploadFile(`${localPath}/${file}`, `${remotePath}/${file}`);
+            console.log(`Upload file ${file} - result: ${JSON.stringify(r)}`);
             check(r, {
                 "is success": (r) => r.success === true,
             });
@@ -21,15 +22,25 @@ export default function () {
 
     arrayFiles.forEach(file => {
         group(`Download ${file}`, function () {
-            const r = client.downloadFile(`${remotePath}/${file}`, `./examples/test-data/downloaded/${file}`);
-            //console.log(r);
+            const r = client.downloadFile(`${remotePath}/${file}`, `${localPath}/downloaded/${file}`);
+            console.log(`Download file ${file} - result: ${JSON.stringify(r)}`);
             check(r, {
                 "is success": (r) => r.success === true,
             });
         });
-
         sleep(0.3);
     });
+
+    arrayFiles.forEach(file => {
+        group(`Delete ${file}`, function () {
+            const r = client.deleteFile(`${remotePath}/${file}`);
+            console.log(`Delete file ${file} - result: ${JSON.stringify(r)}`);
+            check(r, {
+                "is success": (r) => r.success === true,
+            });
+        });
+        sleep(0.3);
+    })
 }
 
 export function teardown() {
