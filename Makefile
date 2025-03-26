@@ -1,8 +1,12 @@
+PROJECT_VERSION := 1.0.0
+
+GOPATH := $(shell command go env GOPATH)
+
 XK6_VERSION := v0.13.4
-XK6_BINARY := $(shell command -v xk6 2> /dev/null)
+XK6_BINARY := "$(GOPATH)/bin/xk6"
 
 GOLANGCI_VERSION := v1.64.5
-GOLANGCI_BINARY := $(shell command -v golangci-lint 2> /dev/null)
+GOLANGCI_BINARY := "$(GOPATH)/bin/golangci-lint"
 
 .DEFAULT_GOAL := all
 
@@ -38,7 +42,7 @@ compose-down:
 .PHONY: build
 build: deps
 	@echo "Building k6  with STP extension..."
-	@xk6 build --with github.com/InditexTech/xk6-sftp=.
+	@"$(XK6_BINARY)" build --with github.com/InditexTech/xk6-sftp=.
 
 .PHONY: run
 run: deps compose-up
@@ -67,4 +71,23 @@ format:
 .PHONY: lint
 lint: deps
 	@echo "Running golangci-lint..."
-	@golangci-lint run
+	@"$(GOLANGCI_BINARY)" run
+
+.PHONY: reuse-deps
+reuse-deps:
+	@if [ -z "reuse" ]; then \
+		echo "Installing reuse tool..."; \
+		pip3 install --user reuse ;\
+	else \
+		echo "reuse is already installed."; \
+	fi
+
+.PHONY: add-copyright-headers
+reuse-annotate: reuse-deps
+	@echo "Adding copyright headers..."
+	@reuse annotate --copyright "Industria de Diseño Textil S.A. INDITEX" --license "Apache-2.0" --year "$$(date +%Y)" --merge-copyrights *.go
+	@reuse lint
+
+.PHONY: get-version
+get-version:
+	@echo $(PROJECT_VERSION)
