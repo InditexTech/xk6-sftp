@@ -76,3 +76,13 @@ export function teardown() {
 ```
 
 See the [examples](./examples) folder for a more detailed usage example.
+
+## Contributing
+
+Contributions are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute to this project.
+
+## License
+
+This project is licensed under the terms of the [AGPL-3.0-only](LICENSE) license.
+
+© 2025 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
