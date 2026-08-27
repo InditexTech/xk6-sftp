@@ -75,6 +75,11 @@ export function teardown() {
 }
 ```
 
+SSH host keys are verified against `~/.ssh/known_hosts`. Set
+`XK6_SFTP_KNOWN_HOSTS` to use a different known hosts file. Add and verify the
+server's host key before connecting; connections to unknown or changed keys are
+rejected.
+
 See the [examples](./examples) folder for a more detailed usage example.
 
 ## Contributing

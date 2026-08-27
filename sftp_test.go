@@ -5,11 +5,17 @@
 package xk6sftp
 
 import (
+	"errors"
 	"fmt"
+	"net"
 	"os"
+	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
+	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/knownhosts"
 )
 
 const (
@@ -21,27 +27,27 @@ const (
 
 func TestSFTPClient_Connect(t *testing.T) {
 	client := Client{}
-	sftpClient := client.NewClient(user, password, host, port)
+	sftpClient := newTestSFTPClient(t, &client, port)
 	require.NotNil(t, sftpClient)
 	sftpClient.Close()
 }
 
 func TestSFTPClient_Close(t *testing.T) {
 	client := Client{}
-	sftpClient := client.NewClient(user, password, host, port)
+	sftpClient := newTestSFTPClient(t, &client, port)
 	require.NotNil(t, sftpClient)
 	sftpClient.Close()
 }
 
 func TestSFTPClient_ConnectErrors(t *testing.T) {
 	client := Client{}
-	sftpClient := client.NewClient(user, password, host, 23)
+	sftpClient := newTestSFTPClient(t, &client, 23)
 	require.Nil(t, sftpClient)
 }
 
 func TestSFTPClient_UploadFile(t *testing.T) {
 	client := new(Client)
-	sftpClient := client.NewClient(user, password, host, port)
+	sftpClient := newTestSFTPClient(t, client, port)
 	require.NotNil(t, sftpClient)
 	defer sftpClient.Close()
 
@@ -76,7 +82,7 @@ func TestSFTPClient_UploadFile(t *testing.T) {
 
 func TestSFTPClient_DownloadFile(t *testing.T) {
 	client := new(Client)
-	sftpClient := client.NewClient(user, password, host, port)
+	sftpClient := newTestSFTPClient(t, client, port)
 	require.NotNil(t, sftpClient)
 	defer sftpClient.Close()
 
@@ -111,7 +117,7 @@ func createRemoteTestFile(sftpClient *SFTPClient, remotePath string, t *testing.
 
 func TestErrorValidations(t *testing.T) {
 	client := new(Client)
-	sftpClient := client.NewClient(user, password, host, port)
+	sftpClient := newTestSFTPClient(t, client, port)
 	require.NotNil(t, sftpClient)
 	defer sftpClient.Close()
 
@@ -231,4 +237,29 @@ func TestErrorValidations(t *testing.T) {
 			require.Equal(t, tc.expected, result.Success)
 		})
 	}
+}
+
+func newTestSFTPClient(t *testing.T, client *Client, targetPort int) *SFTPClient {
+	t.Helper()
+
+	var serverHostKey ssh.PublicKey
+	keyCaptured := errors.New("host key captured")
+	config := &ssh.ClientConfig{
+		User:    user,
+		Timeout: 5 * time.Second,
+		HostKeyCallback: func(_ string, _ net.Addr, key ssh.PublicKey) error {
+			serverHostKey = key
+			return keyCaptured
+		},
+	}
+	_, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", host, port), config)
+	require.ErrorIs(t, err, keyCaptured)
+	require.NotNil(t, serverHostKey)
+
+	knownHostsPath := filepath.Join(t.TempDir(), "known_hosts")
+	knownHost := knownhosts.Line([]string{fmt.Sprintf("[%s]:%d", host, port)}, serverHostKey)
+	require.NoError(t, os.WriteFile(knownHostsPath, []byte(knownHost+"\n"), 0600))
+	t.Setenv(knownHostsEnv, knownHostsPath)
+
+	return client.NewClient(user, password, host, targetPort)
 }

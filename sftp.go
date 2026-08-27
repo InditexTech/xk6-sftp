@@ -13,7 +13,10 @@ import (
 
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/knownhosts"
 )
+
+const knownHostsEnv = "XK6_SFTP_KNOWN_HOSTS"
 
 type Client struct{}
 
@@ -22,12 +25,18 @@ type SFTPClient struct {
 }
 
 func (*Client) NewClient(user, password, host string, port int) *SFTPClient {
+	hostKeyCallback, err := newHostKeyCallback()
+	if err != nil {
+		logger.Errorf("failed to configure SSH host key verification: %v", err)
+		return nil
+	}
+
 	config := &ssh.ClientConfig{
 		User: user,
 		Auth: []ssh.AuthMethod{
 			ssh.Password(password),
 		},
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		HostKeyCallback: hostKeyCallback,
 		Timeout:         5 * time.Second,
 	}
 
@@ -45,6 +54,23 @@ func (*Client) NewClient(user, password, host string, port int) *SFTPClient {
 	}
 
 	return &SFTPClient{client: client}
+}
+
+func newHostKeyCallback() (ssh.HostKeyCallback, error) {
+	knownHostsPath := os.Getenv(knownHostsEnv)
+	if knownHostsPath == "" {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return nil, fmt.Errorf("resolve user home directory: %w", err)
+		}
+		knownHostsPath = filepath.Join(homeDir, ".ssh", "known_hosts")
+	}
+
+	callback, err := knownhosts.New(knownHostsPath)
+	if err != nil {
+		return nil, fmt.Errorf("load known hosts file %q: %w", knownHostsPath, err)
+	}
+	return callback, nil
 }
 
 func (s *SFTPClient) UploadFile(localPath, remotePath string) *OperationResult {
