@@ -1,0 +1,19 @@
+go.sum
+  s_174e6f2fb30a57::t_f0e0909d7df343 1-8,11-16,21-22,28-29,42-45,50-53,57-58,61-68,85-86,90-93,96-97,99-120,123-124,128-129,136-137,151-154,157-160,168-175,182-183,186-187
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "317944be1bb4c7bd445bdc73cd0caff0061bda63",
+  "prompts": {},
+  "sessions": {
+    "s_174e6f2fb30a57": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbcfb665effeEXtYUWHwGvZe1g",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Mariano Alonso Ortiz <marianoao@inditex.com>"
+    }
+  }
+}
