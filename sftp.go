@@ -84,7 +84,11 @@ func (s *SFTPClient) UploadFile(localPath, remotePath string) *OperationResult {
 		logger.Errorf("failed to open local file (%s): %v", absLocalPath, err)
 		return &OperationResult{Success: false, Message: fmt.Sprintf("failed to open local file (%s): %v", absLocalPath, err)}
 	}
-	defer srcFile.Close()
+	defer func() {
+		if cerr := srcFile.Close(); cerr != nil {
+			logger.Errorf("failed to close local file (%s): %v", absLocalPath, cerr)
+		}
+	}()
 
 	err = s.client.MkdirAll(filepath.Dir(remotePath))
 	if err != nil {
@@ -96,7 +100,11 @@ func (s *SFTPClient) UploadFile(localPath, remotePath string) *OperationResult {
 	if err != nil {
 		return &OperationResult{Success: false, Message: fmt.Sprintf("failed to create remote file (%s): %v", remotePath, err)}
 	}
-	defer dstFile.Close()
+	defer func() {
+		if cerr := dstFile.Close(); cerr != nil {
+			logger.Errorf("failed to close remote file (%s): %v", remotePath, cerr)
+		}
+	}()
 
 	bytes, err := io.ReadAll(srcFile)
 	if err != nil {
@@ -120,7 +128,11 @@ func (s *SFTPClient) DownloadFile(remotePath, localPath string) *OperationResult
 		logger.Errorf("failed to open remote file (%s): %v", remotePath, err)
 		return &OperationResult{Success: false, Message: fmt.Sprintf("failed to open remote file (%s): %v", remotePath, err)}
 	}
-	defer srcFile.Close()
+	defer func() {
+		if cerr := srcFile.Close(); cerr != nil {
+			logger.Errorf("failed to close remote file (%s): %v", remotePath, cerr)
+		}
+	}()
 
 	if err := os.MkdirAll(filepath.Dir(localPath), os.ModePerm); err != nil {
 		logger.Errorf("failed to create directories for local file: %v", err)
@@ -132,7 +144,11 @@ func (s *SFTPClient) DownloadFile(remotePath, localPath string) *OperationResult
 		logger.Errorf("failed to create local file (%s): %v", localPath, err)
 		return &OperationResult{Success: false, Message: fmt.Sprintf("failed to create local file (%s): %v", localPath, err)}
 	}
-	defer dstFile.Close()
+	defer func() {
+		if cerr := dstFile.Close(); cerr != nil {
+			logger.Errorf("failed to close local file (%s): %v", localPath, cerr)
+		}
+	}()
 
 	bytes, err := io.ReadAll(srcFile)
 	if err != nil {

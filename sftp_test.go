@@ -67,7 +67,7 @@ func TestSFTPClient_UploadFile(t *testing.T) {
 	require.NoError(t, err)
 	_, err = file.WriteString("This is a test file for upload.")
 	require.NoError(t, err)
-	file.Close()
+	require.NoError(t, file.Close())
 
 	fmt.Printf("Local file created at %s\n", localPath)
 	fmt.Printf("Uploading file to %s\n", remotePath)
@@ -75,7 +75,7 @@ func TestSFTPClient_UploadFile(t *testing.T) {
 	require.Equal(t, true, result.Success)
 
 	// Clean up
-	os.Remove(localPath)
+	require.NoError(t, os.Remove(localPath))
 	result = sftpClient.DeleteFile(remotePath)
 	require.Equal(t, true, result.Success)
 }
@@ -102,7 +102,7 @@ func TestSFTPClient_DownloadFile(t *testing.T) {
 	require.Equal(t, "This is a test file for download.", string(downloadedFile))
 
 	// Clean up
-	os.Remove(localPath)
+	require.NoError(t, os.Remove(localPath))
 	result = sftpClient.DeleteFile(remotePath)
 	require.Equal(t, true, result.Success)
 }
@@ -112,7 +112,7 @@ func createRemoteTestFile(sftpClient *SFTPClient, remotePath string, t *testing.
 	require.NoError(t, err)
 	_, err = file.Write([]byte("This is a test file for download."))
 	require.NoError(t, err)
-	file.Close()
+	require.NoError(t, file.Close())
 }
 
 func TestErrorValidations(t *testing.T) {
