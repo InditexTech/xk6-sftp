@@ -1,0 +1,25 @@
+.gitignore
+  s_ee541d9c6e7ed5::t_8d61a8e0029886 7
+Makefile
+  s_ee541d9c6e7ed5::t_c52423ff49e6cc 47-57,59,61
+sftp_test.go
+  s_ee541d9c6e7ed5::t_91431b3131f2ac 70,78,105,115
+sftp.go
+  s_ee541d9c6e7ed5::t_38e7e107c416e5 87-91,103-107,131-135,147-151
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3fe6a2d430d10b9178007fcdee71d8d4b84929d1",
+  "prompts": {},
+  "sessions": {
+    "s_ee541d9c6e7ed5": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a5e4fb3b-93d0-488c-b254-9e4881962b44",
+        "model": "copilot/claude-sonnet-5"
+      },
+      "human_author": "Iván Álvarez <ivanape@inditex.com>"
+    }
+  }
+}
