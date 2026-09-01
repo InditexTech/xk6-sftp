@@ -44,10 +44,21 @@ build: deps
 	@echo "Building k6  with STP extension..."
 	@"$(XK6_BINARY)" build --with github.com/InditexTech/xk6-sftp=.
 
+KNOWN_HOSTS_FILE := $(CURDIR)/.sftp_known_hosts
+
+.PHONY: known-hosts
+known-hosts:
+	@echo "Trusting local sftp server host key..."
+	@for i in $$(seq 1 10); do \
+		ssh-keyscan -p 3322 -T 2 -t rsa,ecdsa,ed25519 localhost > "$(KNOWN_HOSTS_FILE)" 2>/dev/null; \
+		[ -s "$(KNOWN_HOSTS_FILE)" ] && break; \
+		sleep 1; \
+	done
+
 .PHONY: run
-run: deps compose-up
+run: deps compose-up known-hosts
 	@echo "Running example..."
-	@"$(XK6_BINARY)" run --vus=1 --iterations=10 ./examples/main.js
+	@XK6_SFTP_KNOWN_HOSTS="$(KNOWN_HOSTS_FILE)" "$(XK6_BINARY)" run --vus=1 --iterations=10 ./examples/main.js
 
 .PHONY: verify
 verify: compose-up deps format lint test compose-down

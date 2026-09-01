@@ -4,5 +4,6 @@ testdata
 .tool-versions
 .bin/
 coverage.*
+.sftp_known_hosts
 .vscode/
 .idea/
