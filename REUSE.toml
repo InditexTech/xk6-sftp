@@ -13,6 +13,7 @@ path = [
     "docker/**",
     "examples/**",
     "repolinter.json",
+    ".sync-exclude",
     "REUSE.toml",
     "Makefile"
 ]
