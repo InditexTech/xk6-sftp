@@ -1,0 +1,14 @@
+Makefile
+  h_e3804906c674bd 3,6,9,18,21,28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "515a33c6e63f86731e0303bf7cfee1d7347fd8fd",
+  "prompts": {},
+  "humans": {
+    "h_e3804906c674bd": {
+      "author": "Ivan Alvarez Sabin <ivanasabi@ext.inditex.com>"
+    }
+  }
+}
