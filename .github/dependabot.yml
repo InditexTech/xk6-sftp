@@ -9,15 +9,7 @@ updates:
       time: '04:00'
       timezone: UTC
     open-pull-requests-limit: 10
-
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
-      day: monday
-      time: '04:00'
-      timezone: UTC
-    open-pull-requests-limit: 5
+    skip-release: true
 
   - package-ecosystem: docker-compose
     directory: /docker
@@ -27,3 +19,4 @@ updates:
       time: '04:00'
       timezone: UTC
     open-pull-requests-limit: 5
+    skip-release: true
