@@ -1,0 +1,14 @@
+.github/dependabot.yml
+  h_e3804906c674bd 12,22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "326586b0f8ed8077b0240fd9f5df4e4abbb3beba",
+  "prompts": {},
+  "humans": {
+    "h_e3804906c674bd": {
+      "author": "Ivan Alvarez Sabin <ivanasabi@ext.inditex.com>"
+    }
+  }
+}
