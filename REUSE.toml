@@ -14,7 +14,8 @@ path = [
     "examples/**",
     "repolinter.json",
     "REUSE.toml",
-    "Makefile"
+    "Makefile",
+    ".sync-exclude"
 ]
 SPDX-FileCopyrightText = "2025 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "Apache-2.0"
